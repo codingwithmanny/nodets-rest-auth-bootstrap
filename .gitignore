@@ -1,0 +1,11 @@
+node_modules/
+build
+dist
+*.log
+.env
+yarn.lock
+package-lock.json
+.eslintcache
+**/.DS_Store
+coverage
+prisma/migrations/*.lock

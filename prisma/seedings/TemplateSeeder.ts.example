@@ -1,0 +1,34 @@
+// Imports
+// ========================================================
+import { PrismaClient, ModelName } from '@prisma/client';
+
+// Init
+// ========================================================
+const prisma = new PrismaClient();
+const modelName = 'ModelName';
+
+// Function
+// ========================================================
+async function seed() {
+  const insert: ModelName = await prisma.model.create({
+    data: {},
+  });
+
+  console.log(insert);
+}
+
+// Execute
+// ========================================================
+(async () => {
+  if (process.argv[2] === '--seed') {
+    seed()
+      .catch((error) => {
+        console.log(`Error seeding: ${modelName}`);
+        throw error;
+      })
+      .finally(async () => {
+        await prisma.disconnect();
+        process.exit();
+      });
+  }
+})();
