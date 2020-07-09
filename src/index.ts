@@ -40,7 +40,6 @@ app.use(
       secure: NODE_ENV === 'production' ? true : false, // https
       httpOnly: true,
       sameSite: NODE_ENV === 'production' ? true : false, // sets the same site policy for the cookie
-      domain: process.env.COOKIE_ALLOW || 'http://localhost:5000',
     },
   }),
 );
