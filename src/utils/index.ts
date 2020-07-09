@@ -106,7 +106,7 @@ export const createRefreshToken = (user: User): string => {
  * @param user User
  * @returns {string} jwt
  */
-export const createResetToken = (user: User): string => {
+export const createResetToken = (user: User, time?: number): string => {
   return sign(
     {
       sub: user.id,
@@ -117,7 +117,7 @@ export const createResetToken = (user: User): string => {
     process.env.JWT_RESET_SECRET || 'JWT_RESET_SECRET_NOT_SET',
     {
       algorithm: 'HS256',
-      expiresIn: parseInt(process.env.JWT_RESET_MAX_AGE || '300'),
+      expiresIn: time || parseInt(process.env.JWT_RESET_MAX_AGE || '300'),
     },
   );
 };

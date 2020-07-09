@@ -1,0 +1,1373 @@
+{
+  "info": {
+    "_postman_id": "e4f916c5-b40b-4634-a399-419184cd6e76",
+    "name": "NodeTS REST Auth Bootstrap",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "CSRF",
+          "item": [
+            {
+              "name": "/csrf - 200",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "5c5dd426-c1c7-4822-b6b3-353a71e7c409",
+                    "exec": [""],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a110cf4d-fffe-48c2-ad7e-c9df466c1572",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - token - string\", pm.expect(typeof jsonData.data.token).to.eql(\"string\"));",
+                      "",
+                      "// Env Vars",
+                      "pm.environment.set(\"csrf_token\", jsonData.data.token);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{apiUrl}}/auth/csrf",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "csrf"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Register",
+          "item": [
+            {
+              "name": "/register - 403 - csrf",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "6f892241-1d61-4ba7-997f-d2917b05f7df",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 403\", pm.response.to.have.status(403));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Invalid CSRF token.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/register",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "register"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/register - 422 - blank",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "521b2361-c9a8-4a80-b32c-036a6e16b03b",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 422\", pm.response.to.have.status(422));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - array\", pm.expect(jsonData.errors instanceof Array).to.eql(true));",
+                      "pm.test(\"errors - array - length === 6\", pm.expect(jsonData.errors.length).to.eql(6));",
+                      "",
+                      "pm.test(\"errors - array[0] - first_name - msg\", pm.expect(jsonData.errors[0].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[0] - first_name - param\", pm.expect(jsonData.errors[0].param).to.eql(\"first_name\"));",
+                      "pm.test(\"errors - array[0] - first_name - location\", pm.expect(jsonData.errors[0].location).to.eql(\"body\"));",
+                      "",
+                      "pm.test(\"errors - array[1] - first_name - msg\", pm.expect(jsonData.errors[1].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[1] - first_name - param\", pm.expect(jsonData.errors[1].param).to.eql(\"first_name\"));",
+                      "pm.test(\"errors - array[1] - first_name - location\", pm.expect(jsonData.errors[1].location).to.eql(\"body\"));",
+                      "",
+                      "pm.test(\"errors - array[2] - last_name - msg\", pm.expect(jsonData.errors[2].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[2] - last_name - param\", pm.expect(jsonData.errors[2].param).to.eql(\"last_name\"));",
+                      "pm.test(\"errors - array[2] - last_name - location\", pm.expect(jsonData.errors[2].location).to.eql(\"body\"));",
+                      "",
+                      "pm.test(\"errors - array[3] - last_name - msg\", pm.expect(jsonData.errors[3].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[3] - last_name - param\", pm.expect(jsonData.errors[3].param).to.eql(\"last_name\"));",
+                      "pm.test(\"errors - array[3] - last_name - location\", pm.expect(jsonData.errors[3].location).to.eql(\"body\"));",
+                      "",
+                      "pm.test(\"errors - array[4] - email\", pm.expect(jsonData.errors[4].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[4] - email - param\", pm.expect(jsonData.errors[4].param).to.eql(\"email\"));",
+                      "pm.test(\"errors - array[4] - email - location\", pm.expect(jsonData.errors[4].location).to.eql(\"body\"));",
+                      "",
+                      "pm.test(\"errors - array[5] - password\", pm.expect(jsonData.errors[5].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[5] - password - param\", pm.expect(jsonData.errors[5].param).to.eql(\"password\"));",
+                      "pm.test(\"errors - array[5] - password - location\", pm.expect(jsonData.errors[5].location).to.eql(\"body\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/register",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "register"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/register - 200",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "d0488e3c-59ee-41f1-83ed-9168b734c6d9",
+                    "exec": [""],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "88373163-f6ca-4161-be1f-a20f442b457e",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 200\", pm.response.to.have.status(200));",
+                      "",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - msg - text\", pm.expect(jsonData.data.msg).to.eql(\"Account pending confirmation via email.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"first_name\": \"john\",\n    \"last_name\": \"smith\",\n    \"email\": \"john@smith.com\",\n    \"password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/register",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "register"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/register - 400 - duplicate",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "3eed3837-a87d-47db-a339-df748626535d",
+                    "exec": [""],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "944f8910-9cc5-4f56-9501-cac39045746e",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 400\", pm.response.to.have.status(400));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Duplicate entry for: email\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"first_name\": \"john\",\n    \"last_name\": \"smith\",\n    \"email\": \"john@smith.com\",\n    \"password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/register",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "register"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Login",
+          "item": [
+            {
+              "name": "/login - 403 - csrf",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "4af8a9b2-3d48-4d78-a876-fac223f7e1cf",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 403\", pm.response.to.have.status(403));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Invalid CSRF token.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"john@smith.com\",\n    \"password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/login",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/login - 422 - blank",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e8fdf9cd-be4b-4051-87e9-55081ebd1252",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 422\", pm.response.to.have.status(422));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - array\", pm.expect(jsonData.errors instanceof Array).to.eql(true));",
+                      "pm.test(\"errors - array - length === 2\", pm.expect(jsonData.errors.length).to.eql(2));",
+                      "",
+                      "pm.test(\"errors - array[0] - email - msg\", pm.expect(jsonData.errors[0].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[0] - email - param\", pm.expect(jsonData.errors[0].param).to.eql(\"email\"));",
+                      "pm.test(\"errors - array[0] - email - location\", pm.expect(jsonData.errors[0].location).to.eql(\"body\"));",
+                      "",
+                      "pm.test(\"errors - array[1] - password - msg\", pm.expect(jsonData.errors[1].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[1] - password - param\", pm.expect(jsonData.errors[1].param).to.eql(\"password\"));",
+                      "pm.test(\"errors - array[1] - password - location\", pm.expect(jsonData.errors[1].location).to.eql(\"body\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "type": "text",
+                    "value": "{{csrf_token}}"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/login",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/login - 401 - unconfirmed",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "be810ace-7522-495e-8b5a-6ff2ef7650a7",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 401\", pm.response.to.have.status(401));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Please check your email to confirm your account.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"unconfirmed@account.com\",\n    \"password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/login",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/login - 200",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "a2f3629a-d500-4b02-80fa-df93bd21b15b",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 200\", pm.response.to.have.status(200));",
+                      "",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - id - string\", pm.expect(typeof jsonData.data.id).to.eql(\"string\"));",
+                      "pm.test(\"data - first_name - string\", pm.expect(typeof jsonData.data.first_name).to.eql(\"string\"));",
+                      "pm.test(\"data - last_name - string\", pm.expect(typeof jsonData.data.last_name).to.eql(\"string\"));",
+                      "pm.test(\"data - email - string\", pm.expect(typeof jsonData.data.email).to.eql(\"string\"));",
+                      "pm.test(\"data - email - text\", pm.expect(jsonData.data.email).to.eql(\"confirmed@account.com\"));",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"confirmed@account.com\",\n    \"password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/login",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "login"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Logout",
+          "item": [
+            {
+              "name": "/logout - 200",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "2ad50603-438c-4e74-8cb8-8c5a1a61de0f",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - msg - text\", pm.expect(jsonData.data.msg).to.eql(\"Successfully logged out.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{apiUrl}}/auth/logout",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "logout"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Me",
+          "item": [
+            {
+              "name": "/me - 401 - token",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "bec14b9e-5c06-4f79-af87-4e080ed57e08",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 401\", pm.response.to.have.status(401));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Token is invalid.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{apiUrl}}/auth/me",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "me"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/csrf - 200",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "c904d063-a05d-498d-aab1-baa934b38f45",
+                    "exec": [""],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "c08d4375-42ec-410d-b3a2-28b3b1b1a37e",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - token - string\", pm.expect(typeof jsonData.data.token).to.eql(\"string\"));",
+                      "",
+                      "// Env Vars",
+                      "pm.environment.set(\"csrf_token\", jsonData.data.token);"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{apiUrl}}/auth/csrf",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "csrf"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/login - 200",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "bfdb01c4-c9fe-43c9-a55d-84b179c0af1e",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 200\", pm.response.to.have.status(200));",
+                      "",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - id - string\", pm.expect(typeof jsonData.data.id).to.eql(\"string\"));",
+                      "pm.test(\"data - first_name - string\", pm.expect(typeof jsonData.data.first_name).to.eql(\"string\"));",
+                      "pm.test(\"data - last_name - string\", pm.expect(typeof jsonData.data.last_name).to.eql(\"string\"));",
+                      "pm.test(\"data - email - string\", pm.expect(typeof jsonData.data.email).to.eql(\"string\"));",
+                      "pm.test(\"data - email - text\", pm.expect(jsonData.data.email).to.eql(\"confirmed@account.com\"));",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"confirmed@account.com\",\n    \"password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/login",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "login"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/me - 200 Copy",
+              "event": [
+                {
+                  "listen": "prerequest",
+                  "script": {
+                    "id": "bd2a7faf-9b2c-42e6-995c-8d4db97ec7c4",
+                    "exec": [
+                      "// pm.sendRequest({",
+                      "//     url: pm.environment.get(\"apiUrl\") + '/auth/csrf',",
+                      "//     method: 'GET',",
+                      "// }, (err, res) => {",
+                      "//     if (err) {",
+                      "//         console.log(err);",
+                      "//     }",
+                      "//     pm.sendRequest({",
+                      "//         url: pm.environment.get(\"apiUrl\") + '/auth/login',",
+                      "//         method: 'POST',",
+                      "//         body: {",
+                      "//             mode: 'raw',",
+                      "//             raw: JSON.stringify({ key: 'value '})",
+                      "//         }",
+                      "//     }, (error, ressult) => {",
+                      "//         if (error) {",
+                      "//             console.log('ERROR', error)",
+                      "//         }",
+                      "//     });",
+                      "// });",
+                      "",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                },
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "30c71a84-6c38-4d5b-aa23-43ec0d19761e",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 200\", pm.response.to.have.status(200));",
+                      "",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - id - string\", pm.expect(typeof jsonData.data.id).to.eql(\"string\"));",
+                      "pm.test(\"data - first_name - string\", pm.expect(typeof jsonData.data.first_name).to.eql(\"string\"));",
+                      "pm.test(\"data - last_name - string\", pm.expect(typeof jsonData.data.last_name).to.eql(\"string\"));",
+                      "pm.test(\"data - email - string\", pm.expect(typeof jsonData.data.email).to.eql(\"string\"));",
+                      "pm.test(\"data - email - text\", pm.expect(jsonData.data.email).to.eql(\"confirmed@account.com\"));",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{apiUrl}}/auth/me",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "me"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Refresh",
+          "item": [
+            {
+              "name": "/refresh - 200",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "82a29021-3e9c-4f41-a60c-19462bbc1c6b",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 200\", pm.response.to.have.status(200));",
+                      "",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - msg - text\", pm.expect(jsonData.data.msg).to.eql(\"Token successfully refreshed.\"));",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "protocolProfileBehavior": {
+                "disableBodyPruning": true
+              },
+              "request": {
+                "method": "GET",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/refresh",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "refresh"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Confirm",
+          "item": [
+            {
+              "name": "/confirm - 403 - csrf",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "3c364455-afd3-4ca5-8856-fb14d1fa8406",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 403\", pm.response.to.have.status(403));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Invalid CSRF token.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/confirm",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "confirm"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/confirm - 422 - blank",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "955bb343-9eb9-4698-a1b2-f7a1b2e84326",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 422\", pm.response.to.have.status(422));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - array\", pm.expect(jsonData.errors instanceof Array).to.eql(true));",
+                      "pm.test(\"errors - array - length === 2\", pm.expect(jsonData.errors.length).to.eql(2));",
+                      "",
+                      "pm.test(\"errors - array[0] - confirmation_token - msg\", pm.expect(jsonData.errors[0].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[0] - confirmation_token - param\", pm.expect(jsonData.errors[0].param).to.eql(\"confirmation_token\"));",
+                      "pm.test(\"errors - array[0] - confirmation_token - location\", pm.expect(jsonData.errors[0].location).to.eql(\"body\"));",
+                      "",
+                      "pm.test(\"errors - array[1] - confirmation_token - msg\", pm.expect(jsonData.errors[1].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[1] - confirmation_token - param\", pm.expect(jsonData.errors[1].param).to.eql(\"confirmation_token\"));",
+                      "pm.test(\"errors - array[1] - confirmation_token - location\", pm.expect(jsonData.errors[1].location).to.eql(\"body\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/confirm",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "confirm"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/confirm - 404 - user not found",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "4c475d9e-cabf-44e2-9171-abd0e0e5c7bc",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 404\", pm.response.to.have.status(404));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"User not found.\"));",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"confirmation_token\": \"CONFIRMATION_TOKEN1\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/confirm",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "confirm"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/confirm - 200",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "61fd1d3d-c740-4d3b-a38b-c7f411a281d1",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 200\", pm.response.to.have.status(200));",
+                      "",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - msg - text\", pm.expect(jsonData.data.msg).to.eql(\"Account confirmed.\"));",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"confirmation_token\": \"CONFIRMATION_TOKEN\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/confirm",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "confirm"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Forgot",
+          "item": [
+            {
+              "name": "/forgot - 422 - csrf",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "da5a5fb6-6e19-42cc-97d0-0d6ba6276979",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 403\", pm.response.to.have.status(403));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Invalid CSRF token.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/forgot",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "forgot"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/forgot - 422 - blank",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "78e29f15-bd66-46d4-a8f6-0bcf60ebae88",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 422\", pm.response.to.have.status(422));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - array\", pm.expect(jsonData.errors instanceof Array).to.eql(true));",
+                      "pm.test(\"errors - array - length === 1\", pm.expect(jsonData.errors.length).to.eql(1));",
+                      "",
+                      "pm.test(\"errors - array[0] - email - msg\", pm.expect(jsonData.errors[0].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[0] - email - param\", pm.expect(jsonData.errors[0].param).to.eql(\"email\"));",
+                      "pm.test(\"errors - array[0] - email - location\", pm.expect(jsonData.errors[0].location).to.eql(\"body\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/forgot",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "forgot"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/forgot - 200",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "e479b969-a5fb-4de2-899f-ba2d75ee387b",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 200\", pm.response.to.have.status(200));",
+                      "",
+                      "pm.test(\"success - true\", pm.expect(jsonData.success).to.eql(true));",
+                      "pm.test(\"data - object\", pm.expect(typeof jsonData.data).to.eql(\"object\"));",
+                      "pm.test(\"data - msg - text\", pm.expect(jsonData.data.msg).to.eql(\"Please check your email for the reset instructions.\"));",
+                      ""
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"email\": \"unconfirmed@account.com\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/forgot",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "forgot"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Validate",
+          "item": [
+            {
+              "name": "/reset/validate - 404",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "d8f40e70-777d-4f6c-bf41-ffcbcad9b1a8",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 404\", pm.response.to.have.status(404));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Invalid or missing token.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{apiUrl}}/auth/reset/validate?token={{reset_token}}",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "reset", "validate"],
+                  "query": [
+                    {
+                      "key": "token",
+                      "value": "{{reset_token}}"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        },
+        {
+          "name": "Reset",
+          "item": [
+            {
+              "name": "/reset - 403 - csrf",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "726c9945-3a7a-422c-a315-0bb3c89ac315",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 403\", pm.response.to.have.status(403));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Invalid CSRF token.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"reset_token\": \"{{reset_token}}\",\n    \"new_password\": \"password\",\n    \"confirm_password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/reset",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "reset"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/reset - 401 - invalid",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "725dee9e-fd89-4ccc-8e7f-6fd328241fcb",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 401\", pm.response.to.have.status(401));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - object\", pm.expect(typeof jsonData.errors).to.eql(\"object\"));",
+                      "pm.test(\"errors - msg - text\", pm.expect(jsonData.errors.msg).to.eql(\"Invalid or expired reset token, please restart the process.\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n    \"reset_token\": \"{{reset_token}}\",\n    \"new_password\": \"password\",\n    \"confirm_password\": \"password\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/reset",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "reset"]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "/reset - 422 - blank",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "id": "ad0aee35-99be-47e6-bd78-268444220008",
+                    "exec": [
+                      "// Setup",
+                      "const jsonData = pm.response.json();",
+                      "",
+                      "// Expectations",
+                      "pm.test(\"status - 422\", pm.response.to.have.status(422));",
+                      "",
+                      "pm.test(\"success - false\", pm.expect(jsonData.success).to.eql(false));",
+                      "pm.test(\"errors - array\", pm.expect(jsonData.errors instanceof Array).to.eql(true));",
+                      "pm.test(\"errors - array - length === 3\", pm.expect(jsonData.errors.length).to.eql(3));",
+                      "",
+                      "pm.test(\"errors - array[0] - reset_token - msg\", pm.expect(jsonData.errors[0].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[0] - reset_token - param\", pm.expect(jsonData.errors[0].param).to.eql(\"reset_token\"));",
+                      "pm.test(\"errors - array[0] - reset_token - location\", pm.expect(jsonData.errors[0].location).to.eql(\"body\"));",
+                      "",
+                      "pm.test(\"errors - array[1] - new_password - msg\", pm.expect(jsonData.errors[1].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[1] - new_password - param\", pm.expect(jsonData.errors[1].param).to.eql(\"new_password\"));",
+                      "pm.test(\"errors - array[1] - new_password - location\", pm.expect(jsonData.errors[1].location).to.eql(\"body\"));",
+                      "",
+                      "pm.test(\"errors - array[2] - confirm_password - msg\", pm.expect(jsonData.errors[2].msg).to.eql(\"Invalid value\"));",
+                      "pm.test(\"errors - array[2] - confirm_password - param\", pm.expect(jsonData.errors[2].param).to.eql(\"confirm_password\"));",
+                      "pm.test(\"errors - array[2] - confirm_password - location\", pm.expect(jsonData.errors[2].location).to.eql(\"body\"));"
+                    ],
+                    "type": "text/javascript"
+                  }
+                }
+              ],
+              "request": {
+                "method": "POST",
+                "header": [
+                  {
+                    "key": "X-CSRF-Token",
+                    "value": "{{csrf_token}}",
+                    "type": "text"
+                  }
+                ],
+                "body": {
+                  "mode": "raw",
+                  "raw": "",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                },
+                "url": {
+                  "raw": "{{apiUrl}}/auth/reset",
+                  "host": ["{{apiUrl}}"],
+                  "path": ["auth", "reset"]
+                }
+              },
+              "response": []
+            }
+          ],
+          "protocolProfileBehavior": {},
+          "_postman_isSubFolder": true
+        }
+      ],
+      "protocolProfileBehavior": {}
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "01d00d4c-3296-4b85-b01c-7f8d6d70f8bd",
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "e3550bec-56d1-403c-996c-9a8c7529b303",
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "protocolProfileBehavior": {}
+}

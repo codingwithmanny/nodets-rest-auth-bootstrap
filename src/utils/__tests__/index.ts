@@ -191,6 +191,40 @@ test('test - createResetToken', async () => {
 });
 
 /**
+ * Validates creating an reset jwt overiding time
+ */
+test('test - createResetToken - overide - 100000', async () => {
+  // Setup
+  const user = {
+    id: faker.random.uuid(),
+    first_name: faker.name.firstName(),
+    last_name: faker.name.lastName(),
+    email: faker.internet.email(),
+    password: '$2b$12$xd1XVYEIxtzHDbKYnW/GHOilt9FyW996NzV2iw9cXJajgKIqghg4i',
+    reset_token: null,
+    refresh_token: null,
+    confirmation_token: 'asdf',
+    confirmed_at: null,
+    created_at: new Date(),
+    updated_at: new Date(),
+  } as User;
+
+  // Init
+  const result = await createResetToken(user, 100000);
+
+  // Expectations
+  const decoded: any = jwtDecode(result);
+
+  expect(decoded.sub).toBe(user.id);
+  expect(decoded.email).toBe(user.email);
+  expect(decoded.iss).toBe('api.localhost');
+  expect(decoded.aud).toBe('api.localhost');
+  expect(typeof decoded.iat === 'number').toBeTruthy();
+  expect(typeof decoded.exp === 'number').toBeTruthy();
+  expect(decoded.exp - decoded.iat).toBe(100000);
+});
+
+/**
  * Validates authentication jwt
  */
 test('test - verifyAuthToken', async () => {

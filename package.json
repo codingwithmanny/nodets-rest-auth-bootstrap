@@ -10,7 +10,9 @@
     "build": "tsc",
     "dev": "ts-node-dev src/server.ts",
     "start": "export NODE_ENV=production && tsc && node build/server.js",
-    "test": "yarn test:lint && yarn test:coverage",
+    "newman:run": "./node_modules/.bin/newman run postman/NodeTS-REST-Auth-Bootstrap.postman_collection.json -e postman/NodeTS-Local-ENV-VARS.postman_environment.json",
+    "test": "yarn test:lint; yarn test:coverage; yarn test:newman;",
+    "test:newman": "./node_modules/.bin/ts-node-dev prisma/commands/UsersDelete.ts --delete; yarn db:seed:all; start-server-and-test dev http://localhost:5000 newman:run;",
     "test:jest": "./node_modules/.bin/jest --watch src",
     "test:coverage": "./node_modules/.bin/jest --coverage src",
     "test:lint": "./node_modules/.bin/eslint '*/**/*.{js,ts}' --quiet --fix",
@@ -73,8 +75,10 @@
     "husky": "^4.2.5",
     "jest": "^26.1.0",
     "lint-staged": "^10.2.11",
+    "newman": "^5.1.1",
     "prettier": "^2.0.5",
     "standard-version": "^8.0.0",
+    "start-server-and-test": "^1.11.0",
     "ts-jest": "^26.1.1",
     "ts-node-dev": "^1.0.0-pre.50"
   }
