@@ -56,7 +56,9 @@ router.post(
 
     // Send email
     try {
-      await sendResetPasswordEmail(user.email, resetToken);
+      if (process.env.ENABLE_EMAIL === 'true') {
+        await sendResetPasswordEmail(user.email, resetToken);
+      }
     } catch (error) {
       return res.status(500).json(
         buildErrorResponse({
