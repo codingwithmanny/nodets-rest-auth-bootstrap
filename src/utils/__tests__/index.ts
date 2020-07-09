@@ -2,9 +2,10 @@
 // ========================================================
 import faker from 'faker';
 import jwtDecode from 'jwt-decode';
-import { User } from '@prisma/client';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from 'axios';
 import formData from 'form-data';
+import bcrypt from 'bcrypt';
+import { User } from '@prisma/client';
 import {
   hashPassword,
   getGeneratedToken,
@@ -25,11 +26,11 @@ import {
 
 // Mocks
 // ========================================================
-const axiosPost = jest.fn();
-jest.mock('axios');
-(axios as jest.Mocked<typeof axios>).post.mockImplementation(
-  jest.fn().mockImplementation(axiosPost),
-);
+jest.mock('axios', () => {
+  return Object.assign(jest.fn(), {
+    post: jest.fn().mockReturnValue({ success: true }),
+  });
+});
 
 const formDataAppend = jest.fn();
 const formDataGetHeaders = jest.fn();
@@ -361,14 +362,16 @@ test('test - sendEmail - hello@email.com, some@email.com, my subject, hello ther
   const subject = 'my subject';
   const body = 'hello there!';
   const basicAuth = Buffer.from(`api:secret`).toString('base64');
+  const spyOnAxiosPost = jest.spyOn(axios, 'post');
 
+  process.env.ENABLE_EMAIL = 'true';
   process.env.MAILGUN_API_URL = 'url';
   process.env.MAILGUN_DOMAIN = 'domain';
   process.env.MAILGUN_SECRET_KEY = 'secret';
 
   // Pre Expectations
   expect(formData).not.toHaveBeenCalled();
-  expect(axiosPost).not.toHaveBeenCalled();
+  expect(spyOnAxiosPost).not.toBeCalled();
 
   // Init
   const result = await sendEmail(from, to, subject, body);
@@ -388,7 +391,7 @@ test('test - sendEmail - hello@email.com, some@email.com, my subject, hello ther
   expect(formDataGetHeaders).toHaveBeenCalledTimes(1);
 
   // Axios
-  expect(axiosPost).toHaveBeenCalledTimes(1);
+  expect(spyOnAxiosPost).toBeCalledTimes(1);
   expect(axios.post).toHaveBeenCalledWith(
     'url/domain/messages',
     { append: formDataAppend, getHeaders: formDataGetHeaders },
@@ -399,7 +402,7 @@ test('test - sendEmail - hello@email.com, some@email.com, my subject, hello ther
       },
     },
   );
-  expect(result).toBe(undefined);
+  expect(result).toStrictEqual({ success: true });
 });
 
 /**
@@ -413,14 +416,16 @@ test('test - sendResetPasswordEmail - hello@email.com, some@email.com, my subjec
   const body =
     '<p>Here is the link to <a href="/asdf1234">reset your password</a>.</p><p><a href="/asdf1234">/asdf1234</a></p>.';
   const basicAuth = Buffer.from(`api:secret`).toString('base64');
+  const spyOnAxiosPost = jest.spyOn(axios, 'post');
 
+  process.env.ENABLE_EMAIL = 'true';
   process.env.MAILGUN_DOMAIN = 'domain';
   process.env.MAILGUN_SECRET_KEY = 'secret';
   process.env.EMAIL_SUBJECT_RESET = subject;
 
   // Pre Expectations
   expect(formData).not.toHaveBeenCalled();
-  expect(axiosPost).not.toHaveBeenCalled();
+  expect(spyOnAxiosPost).not.toBeCalled();
 
   // Init
   const result = await sendResetPasswordEmail(to, 'asdf1234');
@@ -440,7 +445,7 @@ test('test - sendResetPasswordEmail - hello@email.com, some@email.com, my subjec
   expect(formDataGetHeaders).toHaveBeenCalledTimes(1);
 
   // Axios
-  expect(axiosPost).toHaveBeenCalledTimes(1);
+  expect(spyOnAxiosPost).toBeCalledTimes(1);
   expect(axios.post).toHaveBeenCalledWith(
     'url/domain/messages',
     { append: formDataAppend, getHeaders: formDataGetHeaders },
@@ -451,7 +456,7 @@ test('test - sendResetPasswordEmail - hello@email.com, some@email.com, my subjec
       },
     },
   );
-  expect(result).toBe(undefined);
+  expect(result).toStrictEqual({ success: true });
 });
 
 /**
@@ -465,6 +470,7 @@ test('test - sendConfirmAccountEmail - hello@email.com, some@email.com, my subje
   const body =
     '<p>Here is the link to <a href="/asdf1234">confirm your account</a>.</p><p><a href="/asdf1234">/asdf1234</a></p>.';
   const basicAuth = Buffer.from(`api:secret`).toString('base64');
+  const spyOnAxiosPost = jest.spyOn(axios, 'post');
 
   process.env.MAILGUN_DOMAIN = 'domain';
   process.env.MAILGUN_SECRET_KEY = 'secret';
@@ -472,7 +478,7 @@ test('test - sendConfirmAccountEmail - hello@email.com, some@email.com, my subje
 
   // Pre Expectations
   expect(formData).not.toHaveBeenCalled();
-  expect(axiosPost).not.toHaveBeenCalled();
+  expect(spyOnAxiosPost).not.toBeCalled();
 
   // Init
   const result = await sendConfirmAccountEmail(to, 'asdf1234');
@@ -492,7 +498,7 @@ test('test - sendConfirmAccountEmail - hello@email.com, some@email.com, my subje
   expect(formDataGetHeaders).toHaveBeenCalledTimes(1);
 
   // Axios
-  expect(axiosPost).toHaveBeenCalledTimes(1);
+  expect(spyOnAxiosPost).toBeCalledTimes(1);
   expect(axios.post).toHaveBeenCalledWith(
     'url/domain/messages',
     { append: formDataAppend, getHeaders: formDataGetHeaders },
@@ -503,5 +509,5 @@ test('test - sendConfirmAccountEmail - hello@email.com, some@email.com, my subje
       },
     },
   );
-  expect(result).toBe(undefined);
+  expect(result).toStrictEqual({ success: true });
 });

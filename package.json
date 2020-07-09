@@ -1,8 +1,8 @@
 {
-  "name": "nodets-bootstrap",
+  "name": "nodets-rest-auth-bootstrap",
   "version": "1.0.3",
   "main": "src/index.js",
-  "repository": "https://github.com/codingwithmanny/nodets-base",
+  "repository": "https://github.com/codingwithmanny/nodets-rest-auth-bootstrap",
   "author": "@codingwithmanny",
   "license": "MIT",
   "scripts": {
@@ -11,8 +11,8 @@
     "dev": "ts-node-dev src/server.ts",
     "start": "export NODE_ENV=production && tsc && node build/server.js",
     "test": "yarn test:lint && yarn test:coverage",
-    "test:jest": "./node_modules/.bin/jest --watch",
-    "test:coverage": "./node_modules/.bin/jest --coverage",
+    "test:jest": "./node_modules/.bin/jest --watch src",
+    "test:coverage": "./node_modules/.bin/jest --coverage src",
     "test:lint": "./node_modules/.bin/eslint '*/**/*.{js,ts}' --quiet --fix",
     "db:save": "./node_modules/.bin/prisma migrate save --experimental",
     "db:seed:gen": "cp ./prisma/seedings/TemplateSeeder.ts.example ./prisma/seedings/NEW.ts",

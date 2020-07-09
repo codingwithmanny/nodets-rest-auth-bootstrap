@@ -22,6 +22,9 @@ router.get('/', async (req: Request, res: Response) => {
   const token: string = req.cookies.refreshToken;
 
   try {
+    if (!token) {
+      throw new Error(CONST.AUTH.REFRESH.ERRORS.INVALID);
+    }
     const verify = verifyRefreshToken(token);
 
     const users: User[] | null = await prisma.user.findMany({

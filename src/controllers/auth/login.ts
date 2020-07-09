@@ -25,7 +25,7 @@ const prisma = new PrismaClient();
 // ========================================================
 router.post(
   '/',
-  [(check('email').isEmail(), check('password').isLength({ min: 8 }))],
+  [check('email').isString(), check('password').isLength({ min: 8 })],
   validation,
   async (req: Request, res: Response) => {
     // Get body
@@ -78,12 +78,18 @@ router.post(
       res.cookie('token', token, {
         httpOnly: true,
         maxAge: parseInt(process.env.JWT_MAX_AGE || '900') * 1000,
+        // domain: '.app.local',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production' ? true : false,
       });
 
       // 6. Set refresh token cookie
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: parseInt(process.env.JWT_REFRESH_MAX_AGE || '604800') * 1000,
+        // domain: '.app.local',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production' ? true : false,
       });
 
       // 7. Send token data

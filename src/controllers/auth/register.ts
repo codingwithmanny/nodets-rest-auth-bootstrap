@@ -55,7 +55,9 @@ router.post(
       });
 
       // Send email
-      await sendConfirmAccountEmail(body.email, confirmationToken);
+      if (process.env.ENABLE_EMAIL === 'true') {
+        await sendConfirmAccountEmail(body.email, confirmationToken);
+      }
 
       return res.json(
         buildSuccessResponse({
@@ -64,7 +66,9 @@ router.post(
       );
     } catch (error) {
       // Fail if could not create user (ex: duplicate record)
-      return res.json(buildErrorResponse({ msg: ErrorDefinition(error) }));
+      return res
+        .status(400)
+        .json(buildErrorResponse({ msg: ErrorDefinition(error) }));
     }
   },
 );
