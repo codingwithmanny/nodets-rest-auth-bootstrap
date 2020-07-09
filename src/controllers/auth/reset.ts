@@ -25,7 +25,7 @@ const prisma = new PrismaClient();
 router.post(
   '/',
   [
-    check('token').isLength({ min: 1 }),
+    check('reset_token').isLength({ min: 1 }),
     check('new_password').isLength({ min: 8 }),
     check('confirm_password').isLength({ min: 8 }),
     body('new_password').custom((value, { req }) => {
@@ -40,9 +40,9 @@ router.post(
     // Get body
     const { body } = req;
 
-    // validate token
+    // validate reset_token
     try {
-      verifyResetToken(body.token);
+      verifyResetToken(body.reset_token);
 
       // Create hash password
       const hashedPassword = await hashPassword(body.new_password);
@@ -51,7 +51,7 @@ router.post(
       const users: User[] | null = await prisma.user.findMany({
         take: 1,
         where: {
-          reset_token: body.token as string,
+          reset_token: body.reset_token as string,
         },
       });
 
