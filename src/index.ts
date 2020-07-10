@@ -15,6 +15,7 @@ dotenv.config();
 
 const NODE_ENV: string = process.env.NODE_ENV || 'development';
 const VERSION: string = process.env.VERSION || 'unknown';
+const COMMIT: string = process.env.COMMIT || 'unknown';
 
 // Init
 // ========================================================
@@ -46,7 +47,7 @@ app.use(csrfMiddleware);
 // Endpoints / Routess
 // ========================================================
 app.get('/', (_req, res) =>
-  res.send({ version: VERSION, environment: NODE_ENV }),
+  res.send({ version: VERSION, environment: NODE_ENV, commit: COMMIT }),
 );
 
 app.use('/api', routes);
