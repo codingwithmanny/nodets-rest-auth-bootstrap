@@ -1,6 +1,6 @@
 {
   "name": "nodets-rest-auth-bootstrap",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "main": "src/index.js",
   "repository": "https://github.com/codingwithmanny/nodets-rest-auth-bootstrap",
   "author": "@codingwithmanny",
