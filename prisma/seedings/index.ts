@@ -1,7 +1,7 @@
 // Imports
 // ========================================================
 import { PrismaClient } from '@prisma/client';
-import { getGeneratedToken, createResetToken } from '../../src/utils';
+import { getGeneratedToken } from '../../src/utils';
 import faker from 'faker';
 
 // Seeds
@@ -35,7 +35,7 @@ async function seedAll(): Promise<void> {
   });
 
   // RESET TOKEN account
-  const resetTokeAccount = await UserSeed({
+  await UserSeed({
     id: 'cfb09a6e-463d-48d4-bdbb-d0430b4e544f',
     email: 'reset@account.com',
     first_name: faker.fake('{{name.firstName}}'),

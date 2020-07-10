@@ -78,18 +78,14 @@ router.post(
       res.cookie('token', token, {
         httpOnly: true,
         maxAge: parseInt(process.env.JWT_MAX_AGE || '900') * 1000,
-        // domain: '.app.local',
         path: '/',
-        secure: process.env.NODE_ENV === 'production' ? true : false,
       });
 
       // 6. Set refresh token cookie
       res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         maxAge: parseInt(process.env.JWT_REFRESH_MAX_AGE || '604800') * 1000,
-        // domain: '.app.local',
         path: '/',
-        secure: process.env.NODE_ENV === 'production' ? true : false,
       });
 
       // 7. Send token data
