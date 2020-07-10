@@ -36,10 +36,8 @@ app.use(
     cookie: {
       key: process.env.CSRF_COOKIE_PREFIX || '_csrf',
       maxAge: parseInt(process.env.CSRF_COOKIE_MAXAGE || '900'),
-      signed: NODE_ENV === 'production' ? true : false, // signature
-      secure: NODE_ENV === 'production' ? true : false, // https
       httpOnly: true,
-      sameSite: NODE_ENV === 'production' ? true : false, // sets the same site policy for the cookie
+      sameSite: false,
     },
   }),
 );
