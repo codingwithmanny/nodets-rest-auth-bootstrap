@@ -1,4 +1,6 @@
-[![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
+[![Version](https://img.shields.io/github/package-json/v/codingwithmanny/nodets-rest-auth-bootstrap?style=flat-square)](https://github.com/codingwithmanny/nodets-rest-auth-bootstrap/blob/master/package.json)
+
+[![Build](https://img.shields.io/github/workflow/status/codingwithmanny/nodets-rest-auth-bootstrap/Node.js%20CI?style=flat-square)](https://github.com/codingwithmanny/nodets-rest-auth-bootstrap/actions/runs/163925691)
 
 # NodeTS REST Auth Bootstrap
 
