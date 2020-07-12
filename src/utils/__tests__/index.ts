@@ -4,7 +4,6 @@ import faker from 'faker';
 import jwtDecode from 'jwt-decode';
 import axios from 'axios';
 import formData from 'form-data';
-import bcrypt from 'bcrypt';
 import { User } from '@prisma/client';
 import {
   hashPassword,
