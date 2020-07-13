@@ -1,8 +1,13 @@
 // Imports
 // ========================================================
+import * as dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
 import { getGeneratedToken } from '../../src/utils';
 import faker from 'faker';
+
+// Config
+// ========================================================
+dotenv.config();
 
 // Seeds
 // ========================================================
