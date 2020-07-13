@@ -27,8 +27,8 @@
     "release": "standard-version"
   },
   "dependencies": {
-    "@prisma/client": "^2.1.3",
     "@prisma/cli": "^2.1.3",
+    "@prisma/client": "^2.1.3",
     "@types/axios": "^0.14.0",
     "@types/bcrypt": "^3.0.0",
     "@types/cookie-parser": "^1.4.2",
@@ -70,6 +70,7 @@
     "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@typescript-eslint/parser": "^3.5.0",
     "commitizen": "^4.1.2",
+    "dotenv-cli": "^3.2.0",
     "eslint": "^7.3.1",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.17.1",

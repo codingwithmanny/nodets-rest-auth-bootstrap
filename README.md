@@ -53,9 +53,17 @@ Using `Docker`
 docker run -it -d -p 5432:5432 -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=secret -e POSTGRES_DB=postgres --name nodetsdb postgres;
 ```
 
-**3 - Configure Database Environment Variables**
+**3 - Setup ENV VARS**
 
-**File:** `./prisma/.env`
+**NOTE:** Make sure to fill them with the correct ENV Variables
+
+```bash
+cp .env.example .env;
+```
+
+and configure the correct `DATABASE_URL`
+
+**File:** `./.env`
 
 ```bash
 DATABASE_URL="postgresql://postgres:secret@localhost:5432/postgres?schema=public"
@@ -67,15 +75,7 @@ DATABASE_URL="postgresql://postgres:secret@localhost:5432/postgres?schema=public
 yarn db:migrate; # npm run db:migrate;
 ```
 
-**5 - Setup ENV VARS**
-
-**NOTE:** Make sure to fill them with the correct ENV Variables
-
-```bash
-cp .env.example .env;
-```
-
-**6 - Server Start**
+**5 - Server Start**
 
 `Development:`
 
@@ -89,7 +89,7 @@ yarn dev; # npm dev;
 yarn start; # npm start;
 ```
 
-**7 - (Optional) Seeding**
+**6 - (Optional) Seeding**
 
 ```bash
 yarn db:seed:all; # npm run db:seed:all

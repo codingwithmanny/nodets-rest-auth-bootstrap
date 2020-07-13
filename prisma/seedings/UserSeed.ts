@@ -1,10 +1,15 @@
 // Imports
 // ========================================================
+import * as dotenv from 'dotenv';
 import { PrismaClient, User } from '@prisma/client';
 import faker from 'faker';
 
 // Utils
 import { hashPassword, getGeneratedToken } from '../../src/utils';
+
+// Config
+// ========================================================
+dotenv.config();
 
 // Init
 // ========================================================
