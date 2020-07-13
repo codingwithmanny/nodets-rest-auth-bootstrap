@@ -18,7 +18,7 @@ const prisma = new PrismaClient();
 // Function
 // ========================================================
 export const Confirm = async (req: Request, res: Response) => {
-  const confirmationToken = req.body?.confirmation_token ?? '';
+  const confirmationToken = req?.body?.confirmation_token ?? null;
 
   // Get user
   const users: User[] | null = await prisma.user.findMany({
