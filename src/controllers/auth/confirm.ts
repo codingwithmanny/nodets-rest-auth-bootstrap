@@ -17,6 +17,11 @@ const prisma = new PrismaClient();
 
 // Function
 // ========================================================
+/**
+ * Function that confirms an account and allows it to be active
+ * @param req Express Request
+ * @param res Express Response
+ */
 export const Confirm = async (req: Request, res: Response) => {
   const confirmationToken = req?.body?.confirmation_token ?? null;
 
