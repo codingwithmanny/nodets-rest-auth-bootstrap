@@ -7,11 +7,20 @@ import { buildSuccessResponse } from '../../utils';
 // ========================================================
 const router = Router();
 
-// Routes
+// Function
 // ========================================================
-router.get('/', async (req: Request, res: Response) => {
+/**
+ * Function that creates a new cross site request forgery token
+ * @param req Express Request
+ * @param res Express Response
+ */
+export const Csrf = async (req: Request, res: Response) => {
   return res.json(buildSuccessResponse({ token: req.csrfToken() }));
-});
+};
+
+// Route
+// ========================================================
+router.get('/', Csrf);
 
 // Exports
 // ========================================================

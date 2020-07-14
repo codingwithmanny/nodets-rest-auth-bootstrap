@@ -2,7 +2,7 @@
  *
  * @param overrides
  */
-export const buildRequest = (...overrides: any) => {
+export const buildRequest = (overrides: any = {}) => {
   const req = {
     body: null,
     query: null,
@@ -15,7 +15,7 @@ export const buildRequest = (...overrides: any) => {
  *
  * @param overrides
  */
-export const buildResponse = (...overrides: any) => {
+export const buildResponse = (overrides: any = {}) => {
   const res: any = {
     status: jest.fn(() => res).mockName('status'),
     send: jest.fn(() => res).mockName('send'),

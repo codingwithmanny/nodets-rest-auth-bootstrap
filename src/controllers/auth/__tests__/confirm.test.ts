@@ -37,8 +37,6 @@ jest.mock('@prisma/client', () => {
   };
 });
 
-// jest.mock('global.Date');
-
 /**
  * Reset mocks
  */
