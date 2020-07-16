@@ -14,12 +14,12 @@ import { Forgot } from '../forgot';
 /**
  * @const
  */
-const mockUserFindOne = jest.fn();
+const mockUserFindOne = jest.fn().mockName('mockUserFindOne');
 
 /**
  * @const
  */
-const mockUserUpdate = jest.fn();
+const mockUserUpdate = jest.fn().mockName('mockUserUpdate');
 
 /**
  * Mock
@@ -38,12 +38,14 @@ jest.mock('@prisma/client', () => {
 /**
  * @var
  */
-const mockCreateResetToken = jest.fn();
+const mockCreateResetToken = jest.fn().mockName('mockCreateResetToken');
 
 /**
  * @var
  */
-const mockSendResetPasswordEmail = jest.fn();
+const mockSendResetPasswordEmail = jest
+  .fn()
+  .mockName('mockSendResetPasswordEmail');
 
 /**
  * Mocking utils function
