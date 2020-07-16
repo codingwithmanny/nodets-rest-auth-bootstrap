@@ -16,12 +16,12 @@ import { Confirm } from '../confirm';
 /**
  * @const
  */
-const mockUserFindMany = jest.fn();
+const mockUserFindMany = jest.fn().mockName('mockUserFindMany');
 
 /**
  * @const
  */
-const mockUserUpdate = jest.fn();
+const mockUserUpdate = jest.fn().mockName('mockUserUpdate');
 
 /**
  * Mock
