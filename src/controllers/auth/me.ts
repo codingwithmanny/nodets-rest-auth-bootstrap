@@ -14,13 +14,13 @@ import CONST from '../../utils/constants';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Routes
+// Function
 // ========================================================
-router.get('/', authenticated, async (req: Request, res: Response) => {
+export const Me = async (req: Request, res: Response) => {
   const user = req?.user ?? null;
 
   if (!user) {
-    return res.status(404).send(
+    return res.status(404).json(
       buildErrorResponse({
         msg: CONST.AUTH.ME.ERRORS.NOT_FOUND,
       }),
@@ -34,7 +34,7 @@ router.get('/', authenticated, async (req: Request, res: Response) => {
   });
 
   if (!userData) {
-    return res.status(404).send(
+    return res.status(404).json(
       buildErrorResponse({
         msg: CONST.AUTH.ME.ERRORS.NOT_FOUND,
       }),
@@ -49,7 +49,11 @@ router.get('/', authenticated, async (req: Request, res: Response) => {
       email: userData.email,
     }),
   );
-});
+};
+
+// Route
+// ========================================================
+router.get('/', authenticated, Me);
 
 // Exports
 // ========================================================

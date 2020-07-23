@@ -1,13 +1,14 @@
 // Imports
 // ========================================================
-import { PrismaClient } from '@prisma/client';
+import MockDate from 'mockdate';
+
 import { buildErrorResponse, buildSuccessResponse } from '../../../utils';
 import CONST from '../../../utils/constants';
 import { buildRequest, buildResponse } from '../../../../test/utils/generate';
 
 // Tested
 // ========================================================
-import { Forgot } from '../forgot';
+import { Me } from '../me';
 
 // Mocks
 // ========================================================
@@ -17,11 +18,6 @@ import { Forgot } from '../forgot';
 const mockUserFindOne = jest.fn().mockName('mockUserFindOne');
 
 /**
- * @constant
- */
-const mockUserUpdate = jest.fn().mockName('mockUserUpdate');
-
-/**
  * Mock
  */
 jest.mock('@prisma/client', () => {
@@ -29,32 +25,10 @@ jest.mock('@prisma/client', () => {
     PrismaClient: jest.fn().mockImplementation(() => ({
       user: {
         findOne: (...args: any) => mockUserFindOne(args),
-        update: (...args: any) => mockUserUpdate(args),
       },
     })),
   };
 });
-
-/**
- * @constant
- */
-const mockCreateResetToken = jest.fn().mockName('mockCreateResetToken');
-
-/**
- * @constant
- */
-const mockSendResetPasswordEmail = jest
-  .fn()
-  .mockName('mockSendResetPasswordEmail');
-
-/**
- * Mocking utils function
- */
-jest.mock('../../../utils', () => ({
-  ...(jest.requireActual('../../../utils') as any),
-  createResetToken: (...args: any) => mockCreateResetToken(args),
-  sendResetPasswordEmail: (...args: any) => mockSendResetPasswordEmail(args),
-}));
 
 /**
  * Reset for mocks
@@ -66,11 +40,10 @@ beforeEach(() => {
 // Tests
 // ========================================================
 /**
- * Cannot find user with empty payload
+ * User not set returns 404 error
  */
-test('test - forgot - payload - {} - not found', async () => {
+test('test - me  - user not set', async () => {
   // Setup
-  mockUserFindOne.mockResolvedValue(null);
   const req = buildRequest();
   const res = buildResponse();
 
@@ -79,80 +52,110 @@ test('test - forgot - payload - {} - not found', async () => {
   expect(res.send).not.toHaveBeenCalled();
   expect(res.json).not.toHaveBeenCalled();
   expect(mockUserFindOne).not.toHaveBeenCalled();
-  expect(mockCreateResetToken).not.toHaveBeenCalled();
 
   // Init
-  await Forgot(req, res);
+  await Me(req, res);
 
   //   Expectations
+  expect(res.send).not.toHaveBeenCalled();
   expect(res.status).toHaveBeenCalledTimes(1);
   expect(res.status).toHaveBeenCalledWith(404);
   expect(res.json).toHaveBeenCalledTimes(1);
-  expect(mockUserFindOne).toHaveBeenCalledTimes(1);
-  expect(mockCreateResetToken).not.toHaveBeenCalled();
+  expect(mockUserFindOne).not.toHaveBeenCalled();
   expect(res.json).toHaveBeenCalledWith(
     buildErrorResponse({
-      msg: CONST.AUTH.FORGOT.ERRORS.NOT_FOUND,
+      msg: CONST.AUTH.ME.ERRORS.NOT_FOUND,
     }),
   );
 });
 
 /**
- * Successfully updates user confirmation
+ * User set db user not found
  */
-test('test - forgot - payload - { email: "test@test.com" }', async () => {
+test('test - me  - user set - db user not found', async () => {
   // Setup
-  mockUserFindOne.mockResolvedValue({
-    id: 'abcd',
-    email: 'test@test.com',
-  });
-  mockUserUpdate.mockResolvedValue(true);
-  mockCreateResetToken.mockReturnValue('MY_TOKEN');
+  mockUserFindOne.mockResolvedValue(null);
   const req = buildRequest({
-    body: {
-      email: 'test@test.com',
+    user: {
+      sub: 'USER_ID',
     },
   });
   const res = buildResponse();
-  process.env.ENABLE_EMAIL = 'true';
 
   // Pre Expectation
   expect(res.status).not.toHaveBeenCalled();
   expect(res.send).not.toHaveBeenCalled();
   expect(res.json).not.toHaveBeenCalled();
   expect(mockUserFindOne).not.toHaveBeenCalled();
-  expect(mockUserUpdate).not.toHaveBeenCalled();
-  expect(mockCreateResetToken).not.toHaveBeenCalled();
-  expect(mockSendResetPasswordEmail).not.toHaveBeenCalled();
 
   // Init
-  await Forgot(req, res);
+  await Me(req, res);
 
-  // Expectations
-  expect(res.status).not.toHaveBeenCalled();
+  //   Expectations
   expect(res.send).not.toHaveBeenCalled();
+  expect(res.status).toHaveBeenCalledTimes(1);
+  expect(res.status).toHaveBeenCalledWith(404);
   expect(res.json).toHaveBeenCalledTimes(1);
   expect(mockUserFindOne).toHaveBeenCalledTimes(1);
-  expect(mockUserUpdate).toHaveBeenCalledTimes(1);
-  expect(mockCreateResetToken).toHaveBeenCalledTimes(1);
-  expect(mockSendResetPasswordEmail).toHaveBeenCalledTimes(1);
-  expect(mockSendResetPasswordEmail).toHaveBeenCalledWith([
-    'test@test.com',
-    'MY_TOKEN',
-  ]);
-  expect(mockUserUpdate).toHaveBeenCalledWith([
+  expect(mockUserFindOne).toHaveBeenCalledWith([
     {
-      data: {
-        reset_token: 'MY_TOKEN',
-      },
       where: {
-        id: 'abcd',
+        id: 'USER_ID',
+      },
+    },
+  ]);
+  expect(res.json).toHaveBeenCalledWith(
+    buildErrorResponse({
+      msg: CONST.AUTH.ME.ERRORS.NOT_FOUND,
+    }),
+  );
+});
+
+/**
+ * User set and db user found
+ */
+test('test - me  - user set - db user found', async () => {
+  // Setup
+  mockUserFindOne.mockResolvedValue({
+    id: 'USER_ID',
+    first_name: 'FIRST_NAME',
+    last_name: 'LAST_NAME',
+    email: 'EMAIL@ADDRESS.COM',
+  });
+  const req = buildRequest({
+    user: {
+      sub: 'USER_ID',
+    },
+  });
+  const res = buildResponse();
+
+  // Pre Expectation
+  expect(res.status).not.toHaveBeenCalled();
+  expect(res.send).not.toHaveBeenCalled();
+  expect(res.json).not.toHaveBeenCalled();
+  expect(mockUserFindOne).not.toHaveBeenCalled();
+
+  // Init
+  await Me(req, res);
+
+  //   Expectations
+  expect(res.send).not.toHaveBeenCalled();
+  expect(res.status).not.toHaveBeenCalled();
+  expect(res.json).toHaveBeenCalledTimes(1);
+  expect(mockUserFindOne).toHaveBeenCalledTimes(1);
+  expect(mockUserFindOne).toHaveBeenCalledWith([
+    {
+      where: {
+        id: 'USER_ID',
       },
     },
   ]);
   expect(res.json).toHaveBeenCalledWith(
     buildSuccessResponse({
-      msg: CONST.AUTH.FORGOT.SUCCESS.EMAIL,
+      id: 'USER_ID',
+      first_name: 'FIRST_NAME',
+      last_name: 'LAST_NAME',
+      email: 'EMAIL@ADDRESS.COM',
     }),
   );
 });

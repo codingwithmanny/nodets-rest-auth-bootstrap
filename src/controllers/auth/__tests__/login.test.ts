@@ -13,12 +13,12 @@ import { Login } from '../login';
 // Mocks
 // ========================================================
 /**
- * @const
+ * @constant
  */
 const mockUserFindOne = jest.fn().mockName('mockUserFindOne');
 
 /**
- * @const
+ * @constant
  */
 const mockUserUpdate = jest.fn().mockName('mockUserUpdate');
 
@@ -37,29 +37,29 @@ jest.mock('@prisma/client', () => {
 });
 
 /**
- * @var
+ * @constant
  */
 const mockCreateResetToken = jest.fn().mockName('mockCreateResetToken');
 
 /**
- * @var
+ * @constant
  */
 const mockSendResetPasswordEmail = jest
   .fn()
   .mockName('mockSendResetPasswordEmail');
 
 /**
- * @var
+ * @constant
  */
 const mockVerifyPassword = jest.fn().mockName('mockVerifyPassword');
 
 /**
- * @var
+ * @constant
  */
 const mockCreateAuthToken = jest.fn().mockName('mockCreateAuthToken');
 
 /**
- * @var
+ * @constant
  */
 const mockCreateRefreshToken = jest.fn().mockName('mockCreateRefreshToken');
 
@@ -76,7 +76,7 @@ jest.mock('../../../utils', () => ({
 }));
 
 /**
- * @var
+ * @constant
  */
 const mockRequestCookie = jest.fn().mockName('mockRequestCookie');
 
