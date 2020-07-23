@@ -30,8 +30,8 @@ jest.mock('@prisma/client', () => {
   return {
     PrismaClient: jest.fn().mockImplementation(() => ({
       user: {
-        findMany: (...args: any) => mockUserFindMany(...args),
-        update: (...args: any) => mockUserUpdate(...args),
+        findMany: (...args: any) => mockUserFindMany(args),
+        update: (...args: any) => mockUserUpdate(args),
       },
     })),
   };
@@ -108,14 +108,16 @@ test('test - confirm - payload - { confirmation_token: 1 }', async () => {
   expect(res.json).toHaveBeenCalledTimes(1);
   expect(mockUserFindMany).toHaveBeenCalledTimes(1);
   expect(mockUserUpdate).toHaveBeenCalledTimes(1);
-  expect(mockUserUpdate).toHaveBeenCalledWith({
-    data: {
-      confirmed_at: new Date(verifyDate),
+  expect(mockUserUpdate).toHaveBeenCalledWith([
+    {
+      data: {
+        confirmed_at: new Date(verifyDate),
+      },
+      where: {
+        id: 'abcd',
+      },
     },
-    where: {
-      id: 'abcd',
-    },
-  });
+  ]);
   expect(res.json).toHaveBeenCalledWith(
     buildSuccessResponse({
       msg: CONST.AUTH.CONFIRM.SUCCESS.CONFIRMED,

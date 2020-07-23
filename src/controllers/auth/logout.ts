@@ -11,11 +11,12 @@ import CONST from '../../utils/constants';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Routes
+// Function
 // ========================================================
-router.get('/', async (req: Request, res: Response) => {
+export const Logout = async (req: Request, res: Response) => {
   // If token present clear refresh token
-  const token = req.cookies.token;
+  const token = req?.cookies?.token;
+
   if (token) {
     const decodedToken = jwtDecode(token) as Request['user'] | null;
 
@@ -41,7 +42,11 @@ router.get('/', async (req: Request, res: Response) => {
       msg: CONST.AUTH.LOGOUT.SUCCESS.LOGGED_OUT,
     }),
   );
-});
+};
+
+// Route
+// ========================================================
+router.get('/', Logout);
 
 // Exports
 // ========================================================
