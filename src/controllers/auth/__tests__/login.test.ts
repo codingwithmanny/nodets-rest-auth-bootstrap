@@ -146,7 +146,7 @@ test('test - login - payload - { email: "test@test.com" } - account not confirme
     },
   });
   const res = buildResponse({
-    cookie: (...args: any) => mockRequestCookie(...args),
+    cookie: (...args: any) => mockRequestCookie(args),
   });
 
   // Pre Expectation
@@ -198,7 +198,7 @@ test('test - login - payload - { email: "test@test.com", password: "asdf1234" } 
     },
   });
   const res = buildResponse({
-    cookie: (...args: any) => mockRequestCookie(...args),
+    cookie: (...args: any) => mockRequestCookie(args),
   });
 
   // Pre Expectation
@@ -261,7 +261,7 @@ test('test - login - payload - { email: "test@test.com", password: "asdf1234" } 
     },
   });
   const res = buildResponse({
-    cookie: (...args: any) => mockRequestCookie(...args),
+    cookie: (...args: any) => mockRequestCookie(args),
   });
 
   // Pre Expectation
@@ -303,16 +303,24 @@ test('test - login - payload - { email: "test@test.com", password: "asdf1234" } 
     },
   ]);
   expect(mockRequestCookie).toHaveBeenCalledTimes(2);
-  expect(mockRequestCookie).toHaveBeenCalledWith('token', authToken, {
-    httpOnly: true,
-    maxAge: 300 * 1000,
-    path: '/',
-  });
-  expect(mockRequestCookie).toHaveBeenCalledWith('refreshToken', refreshToken, {
-    httpOnly: true,
-    maxAge: 400 * 1000,
-    path: '/',
-  });
+  expect(mockRequestCookie).toHaveBeenCalledWith([
+    'token',
+    authToken,
+    {
+      httpOnly: true,
+      maxAge: 300 * 1000,
+      path: '/',
+    },
+  ]);
+  expect(mockRequestCookie).toHaveBeenCalledWith([
+    'refreshToken',
+    refreshToken,
+    {
+      httpOnly: true,
+      maxAge: 400 * 1000,
+      path: '/',
+    },
+  ]);
   expect(mockVerifyPassword).toHaveBeenCalledTimes(1);
   expect(res.json).toHaveBeenCalledWith(
     buildSuccessResponse({

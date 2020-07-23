@@ -16,10 +16,10 @@ import CONST from '../../utils/constants';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Routes
+// Function
 // ========================================================
-router.get('/', async (req: Request, res: Response) => {
-  const token: string = req.cookies.refreshToken;
+export const Refresh = async (req: Request, res: Response) => {
+  const token: string | null = req?.cookies?.refreshToken ?? null;
 
   try {
     if (!token) {
@@ -30,7 +30,7 @@ router.get('/', async (req: Request, res: Response) => {
     const users: User[] | null = await prisma.user.findMany({
       take: 1,
       where: {
-        id: verify.sub,
+        id: verify?.sub,
         refresh_token: token,
       },
     });
@@ -78,7 +78,11 @@ router.get('/', async (req: Request, res: Response) => {
       }),
     );
   }
-});
+};
+
+// Route
+// ========================================================
+router.get('/', Refresh);
 
 // Exports
 // ========================================================
