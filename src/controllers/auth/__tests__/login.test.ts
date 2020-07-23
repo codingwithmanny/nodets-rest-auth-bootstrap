@@ -1,6 +1,5 @@
 // Imports
 // ========================================================
-import { PrismaClient } from '@prisma/client';
 import MockDate from 'mockdate';
 
 import { buildErrorResponse, buildSuccessResponse } from '../../../utils';
@@ -30,8 +29,8 @@ jest.mock('@prisma/client', () => {
   return {
     PrismaClient: jest.fn().mockImplementation(() => ({
       user: {
-        findOne: (...args: any) => mockUserFindOne(...args),
-        update: (...args: any) => mockUserUpdate(...args),
+        findOne: (...args: any) => mockUserFindOne(args),
+        update: (...args: any) => mockUserUpdate(args),
       },
     })),
   };
@@ -69,11 +68,11 @@ const mockCreateRefreshToken = jest.fn().mockName('mockCreateRefreshToken');
  */
 jest.mock('../../../utils', () => ({
   ...(jest.requireActual('../../../utils') as any),
-  createResetToken: (...args: any) => mockCreateResetToken(...args),
-  sendResetPasswordEmail: (...args: any) => mockSendResetPasswordEmail(...args),
-  verifyPassword: (...args: any) => mockVerifyPassword(...args),
-  createAuthToken: (...args: any) => mockCreateAuthToken(...args),
-  createRefreshToken: (...args: any) => mockCreateRefreshToken(...args),
+  createResetToken: (...args: any) => mockCreateResetToken(args),
+  sendResetPasswordEmail: (...args: any) => mockSendResetPasswordEmail(args),
+  verifyPassword: (...args: any) => mockVerifyPassword(args),
+  createAuthToken: (...args: any) => mockCreateAuthToken(args),
+  createRefreshToken: (...args: any) => mockCreateRefreshToken(args),
 }));
 
 /**
@@ -98,7 +97,7 @@ test('test - login - payload - {} - user not found', async () => {
   mockUserFindOne.mockResolvedValue(null);
   const req = buildRequest();
   const res = buildResponse({
-    cookie: (...args: any) => mockRequestCookie(...args),
+    cookie: (...args: any) => mockRequestCookie(args),
   });
 
   // Pre Expectation
@@ -225,7 +224,7 @@ test('test - login - payload - { email: "test@test.com", password: "asdf1234" } 
   expect(mockVerifyPassword).toHaveBeenCalledTimes(1);
   expect(mockCreateAuthToken).not.toHaveBeenCalled();
   expect(mockCreateRefreshToken).not.toHaveBeenCalled();
-  expect(mockVerifyPassword).toHaveBeenCalledWith('1234asdf', 'asdf1234');
+  expect(mockVerifyPassword).toHaveBeenCalledWith(['1234asdf', 'asdf1234']);
   expect(mockRequestCookie).not.toHaveBeenCalled();
   expect(res.json).toHaveBeenCalledWith(
     buildErrorResponse({
@@ -286,18 +285,23 @@ test('test - login - payload - { email: "test@test.com", password: "asdf1234" } 
   expect(res.status).not.toHaveBeenCalled();
   expect(res.json).toHaveBeenCalledTimes(1);
   expect(mockUserFindOne).toHaveBeenCalledTimes(1);
-  expect(mockVerifyPassword).toHaveBeenCalledWith(user.password, user.password);
+  expect(mockVerifyPassword).toHaveBeenCalledWith([
+    user.password,
+    user.password,
+  ]);
   expect(mockCreateAuthToken).toHaveBeenCalledTimes(1);
-  expect(mockCreateAuthToken).toHaveBeenCalledWith(user);
+  expect(mockCreateAuthToken).toHaveBeenCalledWith([user]);
   expect(mockCreateRefreshToken).toHaveBeenCalledTimes(1);
-  expect(mockCreateRefreshToken).toHaveBeenCalledWith(user);
+  expect(mockCreateRefreshToken).toHaveBeenCalledWith([user]);
   expect(mockUserUpdate).toHaveBeenCalledTimes(1);
-  expect(mockUserUpdate).toHaveBeenCalledWith({
-    where: {
-      id: user.id,
+  expect(mockUserUpdate).toHaveBeenCalledWith([
+    {
+      where: {
+        id: user.id,
+      },
+      data: { refresh_token: refreshToken },
     },
-    data: { refresh_token: refreshToken },
-  });
+  ]);
   expect(mockRequestCookie).toHaveBeenCalledTimes(2);
   expect(mockRequestCookie).toHaveBeenCalledWith('token', authToken, {
     httpOnly: true,

@@ -28,8 +28,8 @@ jest.mock('@prisma/client', () => {
   return {
     PrismaClient: jest.fn().mockImplementation(() => ({
       user: {
-        findOne: (...args: any) => mockUserFindOne(...args),
-        update: (...args: any) => mockUserUpdate(...args),
+        findOne: (...args: any) => mockUserFindOne(args),
+        update: (...args: any) => mockUserUpdate(args),
       },
     })),
   };
@@ -52,8 +52,8 @@ const mockSendResetPasswordEmail = jest
  */
 jest.mock('../../../utils', () => ({
   ...(jest.requireActual('../../../utils') as any),
-  createResetToken: (...args: any) => mockCreateResetToken(...args),
-  sendResetPasswordEmail: (...args: any) => mockSendResetPasswordEmail(...args),
+  createResetToken: (...args: any) => mockCreateResetToken(args),
+  sendResetPasswordEmail: (...args: any) => mockSendResetPasswordEmail(args),
 }));
 
 /**
@@ -136,18 +136,20 @@ test('test - forgot - payload - { email: "test@test.com" }', async () => {
   expect(mockUserUpdate).toHaveBeenCalledTimes(1);
   expect(mockCreateResetToken).toHaveBeenCalledTimes(1);
   expect(mockSendResetPasswordEmail).toHaveBeenCalledTimes(1);
-  expect(mockSendResetPasswordEmail).toHaveBeenCalledWith(
+  expect(mockSendResetPasswordEmail).toHaveBeenCalledWith([
     'test@test.com',
     'MY_TOKEN',
-  );
-  expect(mockUserUpdate).toHaveBeenCalledWith({
-    data: {
-      reset_token: 'MY_TOKEN',
+  ]);
+  expect(mockUserUpdate).toHaveBeenCalledWith([
+    {
+      data: {
+        reset_token: 'MY_TOKEN',
+      },
+      where: {
+        id: 'abcd',
+      },
     },
-    where: {
-      id: 'abcd',
-    },
-  });
+  ]);
   expect(res.json).toHaveBeenCalledWith(
     buildSuccessResponse({
       msg: CONST.AUTH.FORGOT.SUCCESS.EMAIL,
