@@ -2,6 +2,8 @@
 
 [![Build](https://img.shields.io/github/workflow/status/codingwithmanny/nodets-rest-auth-bootstrap/Node.js%20CI?style=flat-square)](https://github.com/codingwithmanny/nodets-rest-auth-bootstrap/actions/runs/163925691)
 
+[![Coverage](https://img.shields.io/codecov/c/github/codingwithmanny/nodets-rest-auth-bootstrap?style=flat-square)](https://codecov.io/gh/codingwithmanny/nodets-rest-auth-bootstrap)
+
 # NodeTS REST Auth Bootstrap
 
 Original based off the
