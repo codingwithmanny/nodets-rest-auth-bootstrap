@@ -20,7 +20,61 @@ import validation from '../../middlewares/validation';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Routes
+// Function
+// ========================================================
+export const Reset = async (req: Request, res: Response) => {
+  // Get body
+  const { body } = req;
+
+  // validate reset_token
+  try {
+    verifyResetToken(body.reset_token);
+
+    // Create hash password
+    const hashedPassword = await hashPassword(body.new_password);
+
+    // Validate reset token
+    const users: User[] | null = await prisma.user.findMany({
+      take: 1,
+      where: {
+        reset_token: body.reset_token as string,
+      },
+    });
+
+    if (!users || users.length === 0) {
+      return res.status(404).json(
+        buildErrorResponse({
+          msg: CONST.AUTH.RESET.ERRORS.INVALID,
+        }),
+      );
+    }
+
+    await prisma.user.update({
+      where: {
+        id: users[0].id,
+      },
+      data: {
+        password: hashedPassword,
+        reset_token: null,
+        refresh_token: null,
+      },
+    });
+
+    return res.json(
+      buildSuccessResponse({
+        msg: CONST.AUTH.RESET.SUCCESS.RESET,
+      }),
+    );
+  } catch (error) {
+    return res.status(401).json(
+      buildErrorResponse({
+        msg: CONST.AUTH.RESET.ERRORS.RESTART,
+      }),
+    );
+  }
+};
+
+// Route
 // ========================================================
 router.post(
   '/',
@@ -36,57 +90,7 @@ router.post(
     }),
   ],
   validation,
-  async (req: Request, res: Response) => {
-    // Get body
-    const { body } = req;
-
-    // validate reset_token
-    try {
-      verifyResetToken(body.reset_token);
-
-      // Create hash password
-      const hashedPassword = await hashPassword(body.new_password);
-
-      // Validate reset token
-      const users: User[] | null = await prisma.user.findMany({
-        take: 1,
-        where: {
-          reset_token: body.reset_token as string,
-        },
-      });
-
-      if (!users || users.length === 0) {
-        return res.status(404).json(
-          buildErrorResponse({
-            msg: CONST.AUTH.RESET.ERRORS.INVALID,
-          }),
-        );
-      }
-
-      await prisma.user.update({
-        where: {
-          id: users[0].id,
-        },
-        data: {
-          password: hashedPassword,
-          reset_token: null,
-          refresh_token: null,
-        },
-      });
-
-      return res.json(
-        buildSuccessResponse({
-          msg: CONST.AUTH.RESET.SUCCESS.RESET,
-        }),
-      );
-    } catch (error) {
-      return res.status(401).json(
-        buildErrorResponse({
-          msg: CONST.AUTH.RESET.ERRORS.RESTART,
-        }),
-      );
-    }
-  },
+  Reset,
 );
 
 // Exports
