@@ -14,12 +14,12 @@ import CONST from '../../utils/constants';
 const router = Router();
 const prisma = new PrismaClient();
 
-// Routes
+// Function
 // ========================================================
-router.get('/', async (req: Request, res: Response) => {
+export const Validate = async (req: Request, res: Response) => {
   const { query } = req;
 
-  if (!query.token) {
+  if (!query?.token) {
     return res.status(400).json(
       buildErrorResponse({
         msg: CONST.AUTH.VALIDATE.ERRORS.INVALID,
@@ -56,7 +56,11 @@ router.get('/', async (req: Request, res: Response) => {
       }),
     );
   }
-});
+};
+
+// Route
+// ========================================================
+router.get('/', Validate);
 
 // Exports
 // ========================================================
