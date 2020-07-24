@@ -69,6 +69,7 @@
     "@commitlint/config-conventional": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^3.5.0",
     "@typescript-eslint/parser": "^3.5.0",
+    "codecov": "^3.7.2",
     "commitizen": "^4.1.2",
     "dotenv-cli": "^3.2.0",
     "eslint": "^7.3.1",
