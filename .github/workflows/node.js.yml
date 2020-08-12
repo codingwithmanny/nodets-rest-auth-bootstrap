@@ -37,5 +37,7 @@ jobs:
       - run: yarn env
       - run: yarn test:lint
       - run: yarn test:coverage
+      - run: export $(cat .env | sed 's/#.*//g' | xargs)
+      - run: cat $DATABASE_URL
       - run: yarn db:migrate
       - run: yarn test:newman
