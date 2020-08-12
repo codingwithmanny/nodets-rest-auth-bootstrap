@@ -34,7 +34,7 @@ export default async function deleteAll() {
         throw error;
       })
       .finally(async () => {
-        await prisma.disconnect();
+        await prisma.$disconnect();
         process.exit();
       });
   }
