@@ -38,12 +38,8 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn
       - run: cp .env.example .env
-      - run: echo $DATABASE_URL
-        env:
-          DATABASE_URL: postgresql://postgres:secret@localhost:5432/postgres?schema=public
       - run: yarn test:lint
       - run: yarn test:coverage
-      - run: export $(cat .env | sed 's/#.*//g' | xargs)
       - run: yarn db:migrate
         env:
           DATABASE_URL: postgresql://postgres:secret@localhost:5432/postgres?schema=public
