@@ -24,5 +24,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn
+      - run: cp .env.example .env
+      - run: yarn env
       - run: yarn test:lint
       - run: yarn test:coverage
