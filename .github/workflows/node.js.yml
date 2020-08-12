@@ -20,6 +20,8 @@ jobs:
           POSTGRES_PASSWORD: secret
           POSTGRES_USER: postgres
           POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
         options: >-
           --health-cmd pg_isready --health-interval 10s --health-timeout 5s
           --health-retries 5
@@ -38,11 +40,11 @@ jobs:
       - run: cp .env.example .env
       - run: echo $DATABASE_URL
         env:
-          DATABASE_URL: postgresql://postgres:secret@postgres:5432/postgres?schema=public
+          DATABASE_URL: postgresql://postgres:secret@localhost:5432/postgres?schema=public
       - run: yarn test:lint
       - run: yarn test:coverage
       - run: export $(cat .env | sed 's/#.*//g' | xargs)
       - run: yarn db:migrate
         env:
-          DATABASE_URL: postgresql://postgres:secret@postgres:5432/postgres?schema=public
+          DATABASE_URL: postgresql://postgres:secret@localhost:5432/postgres?schema=public
       - run: yarn test:newman
