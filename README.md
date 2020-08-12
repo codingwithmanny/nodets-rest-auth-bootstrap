@@ -1,7 +1,5 @@
 [![Version](https://img.shields.io/github/package-json/v/codingwithmanny/nodets-rest-auth-bootstrap?style=flat-square)](https://github.com/codingwithmanny/nodets-rest-auth-bootstrap/blob/master/package.json)
-
 [![Build](https://img.shields.io/github/workflow/status/codingwithmanny/nodets-rest-auth-bootstrap/Node.js%20CI?style=flat-square)](https://github.com/codingwithmanny/nodets-rest-auth-bootstrap/actions/runs/163925691)
-
 [![Coverage](https://img.shields.io/codecov/c/github/codingwithmanny/nodets-rest-auth-bootstrap?style=flat-square)](https://codecov.io/gh/codingwithmanny/nodets-rest-auth-bootstrap)
 
 # NodeTS REST Auth Bootstrap
@@ -71,13 +69,19 @@ and configure the correct `DATABASE_URL`
 DATABASE_URL="postgresql://postgres:secret@localhost:5432/postgres?schema=public"
 ```
 
-**4 - Run Migrations**
+**4 - Export Environment Variables**
+
+```bash
+yarn env; # npm run env;
+```
+
+**5 - Run Migrations**
 
 ```bash
 yarn db:migrate; # npm run db:migrate;
 ```
 
-**5 - Server Start**
+**6 - Server Start**
 
 `Development:`
 
@@ -91,7 +95,7 @@ yarn dev; # npm dev;
 yarn start; # npm start;
 ```
 
-**6 - (Optional) Seeding**
+**7 - (Optional) Seeding**
 
 ```bash
 yarn db:seed:all; # npm run db:seed:all
