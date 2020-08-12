@@ -13,6 +13,15 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: secret
+        options: >-
+          --health-cmd pg_isready --health-interval 10s --health-timeout 5s
+          --health-retries 5
+
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x]
@@ -28,3 +37,4 @@ jobs:
       - run: yarn env
       - run: yarn test:lint
       - run: yarn test:coverage
+      - run: yarn test:newman
