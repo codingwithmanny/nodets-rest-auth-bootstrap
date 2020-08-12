@@ -69,7 +69,7 @@ export default async function seed(data?: SeedType): Promise<User> {
         throw error;
       })
       .finally(async () => {
-        await prisma.disconnect();
+        await prisma.$disconnect();
         process.exit();
       });
   }

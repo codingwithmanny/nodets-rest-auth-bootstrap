@@ -1,6 +1,11 @@
 // Imports
 // ========================================================
 import { PrismaClient } from '@prisma/client';
+import * as dotenv from 'dotenv';
+
+// Config
+// ========================================================
+dotenv.config();
 
 // Init
 // ========================================================
@@ -29,7 +34,7 @@ export default async function deleteAll() {
         throw error;
       })
       .finally(async () => {
-        await prisma.disconnect();
+        await prisma.$disconnect();
         process.exit();
       });
   }
