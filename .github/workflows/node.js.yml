@@ -37,4 +37,5 @@ jobs:
       - run: yarn env
       - run: yarn test:lint
       - run: yarn test:coverage
+      - run: yarn db:migrate
       - run: yarn test:newman
