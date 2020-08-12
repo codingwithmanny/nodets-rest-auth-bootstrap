@@ -15,7 +15,7 @@
     "newman:run:production": "./node_modules/.bin/newman run postman/NodeTS-REST-Auth-Bootstrap.postman_collection.json -e postman/NodeTS-Production-ENV-VARS.postman_environment.json",
     "test": "yarn test:lint; yarn test:coverage; yarn test:newman;",
     "test:dev": "yarn test:lint; yarn test:coverage; yarn test:newman:dev;",
-    "test:newman": "./node_modules/.bin/ts-node ./prisma/commands/UsersDelete.ts --delete; yarn db:seed:all; yarn build; start-server-and-test 'yarn start' http://localhost newman:run:production;",
+    "test:newman": "./node_modules/.bin/ts-node ./prisma/commands/UsersDelete.ts --delete; yarn db:seed:all; yarn build; start-server-and-test 'yarn start' http://localhost:8080 newman:run:production;",
     "test:newman:dev": "./node_modules/.bin/ts-node ./prisma/commands/UsersDelete.ts --delete; yarn db:seed:all; start-server-and-test 'yarn dev' http://localhost:5000 newman:run:local;",
     "test:jest": "./node_modules/.bin/jest --watch src",
     "test:coverage": "./node_modules/.bin/jest --coverage src",
