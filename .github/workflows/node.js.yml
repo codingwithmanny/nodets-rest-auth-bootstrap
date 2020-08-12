@@ -34,7 +34,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: yarn
       - run: cp .env.example .env
+      - run: cat .env
       - run: yarn env
+      - run: echo $DATABASE_URL
       - run: yarn test:lint
       - run: yarn test:coverage
       - run: export $(cat .env | sed 's/#.*//g' | xargs)
