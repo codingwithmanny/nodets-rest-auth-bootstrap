@@ -29,17 +29,16 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
+        env:
+          DATABASE_URL: postgresql://postgres:secret@localhost:5432/postgres?schema=public
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
       - run: yarn
       - run: cp .env.example .env
-      - run: cat .env
-      - run: yarn env
       - run: echo $DATABASE_URL
       - run: yarn test:lint
       - run: yarn test:coverage
       - run: export $(cat .env | sed 's/#.*//g' | xargs)
-      - run: cat $DATABASE_URL
       - run: yarn db:migrate
       - run: yarn test:newman
