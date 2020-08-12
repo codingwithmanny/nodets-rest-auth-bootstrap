@@ -9,7 +9,7 @@ dotenv.config();
 
 const NODE_ENV: string = process.env.NODE_ENV || 'development';
 const PORT: number =
-  NODE_ENV === 'production' ? 80 : parseInt(process.env.PORT as string, 10);
+  NODE_ENV === 'production' ? 8080 : parseInt(process.env.PORT as string, 10);
 const VERSION: string = process.env.VERSION || 'unknown';
 
 // Server
