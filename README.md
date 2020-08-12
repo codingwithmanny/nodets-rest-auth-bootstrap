@@ -21,7 +21,7 @@ This repository is meant to be a base to build on top of for building an API.
 git clone https://github.com/codingwithmanny/nodets-rest-auth-bootstrap myproject;
 cd myproject;
 rm -rf .git;
-git init -y;
+git init;
 git remote add origin https://github.com/your/newrepo;
 ```
 
