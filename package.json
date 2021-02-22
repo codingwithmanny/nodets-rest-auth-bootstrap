@@ -84,7 +84,7 @@
     "mockdate": "^3.0.2",
     "newman": "^5.1.1",
     "prettier": "^2.0.5",
-    "standard-version": "^8.0.0",
+    "standard-version": "^9.1.1",
     "start-server-and-test": "^1.11.0",
     "ts-jest": "^26.1.1",
     "ts-node-dev": "^1.0.0-pre.50"
